@@ -1,0 +1,48 @@
+
+====================================
+Building and Running on Summit 
+====================================
+
+module load xl
+module load cuda
+
+Fortran: 
+
+]$ xlf2008_r -qsmp=omp -qoffload -qpreprocess use_device_addr.f90 -DPOWER_XL
+]$ ./a.out 
+ 0x7FFFED2A1F70
+ 0x200060000000
+ 0x7FFFED2A1F70
+
+
+C:
+ 
+]$ xlc_r -qsmp=omp -qoffload use_device_addr.c 
+]$ ./a.out 
+0x2dd40310
+0x200060000000
+0x2dd40310
+
+
+====================================
+Building and Running on Crusher / Frontier 
+====================================
+
+module load PrgEnv-cray #-- likely already loaded as default
+module load craype-accel-amd-gfx90a rocm
+
+Fortran
+
+]$ ftn -fopenmp -eF use_device_addr.f90
+]$ ./a.out 
+ 0x404640
+ 0x155547009000
+ 0x404640
+
+C
+
+]$ cc -fopenmp use_device_addr.c
+]$ ./a.out 
+0x7fffffff666c
+0x155543009000
+0x7fffffff666c
