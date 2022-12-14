@@ -1,0 +1,25 @@
+
+The following can be done within an interactive job or batch job on Summit
+or Crusher / Frontier.
+
+====================================
+Building and Running on Summit 
+====================================
+
+module load xl
+module load cuda
+make clean
+make MACHINE=POWER_XL
+jsrun -n 1 -g 1 -c 1 ./MatrixMultiply_POWER_XL
+
+
+====================================
+Building and Running on Crusher / Frontier 
+====================================
+
+module load PrgEnv-cray #-- likely already loaded as default
+module load craype-accel-amd-gfx90a rocm
+make clean
+
+make MACHINE=Cray_CCE
+srun -n1 ./MatrixMultiply_Cray_CCE 
