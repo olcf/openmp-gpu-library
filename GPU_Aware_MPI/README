@@ -1,0 +1,33 @@
+
+The following can be done within an interactive job or batch job on Summit
+or Crusher / Frontier.
+
+On Summit, only the first example (MPI_Send_Recv_1) can be built because IBM
+XL compiler does not yet support omp_target_associate_ptr() Fortran binding
+defined in OpenMP 5.x spec.
+
+It is possible to do this on IBM XL but one must create the Fortran
+interface first to use the C API call to omp_target_associate_ptr(). This is
+not currently provided in this example. 
+
+====================================
+Building and Running on Summit 
+====================================
+
+module load xl
+module load cuda
+make clean
+make MACHINE=POWER_XL MPI_Send_Recv_1
+jsrun -n 2 -g 1 -c 1 --smpiargs="-gpu" ./MPI_Send_Recv_1_POWER_XL
+
+
+====================================
+Building and Running on Crusher / Frontier 
+====================================
+
+module load PrgEnv-cray #-- likely already loaded as default
+module load craype-accel-amd-gfx90a rocm
+make clean
+make MACHINE=Cray_CCE MPI_Send_Recv_1 MPI_Send_Recv_2
+srun -n 2  ./MPI_Send_Recv_1_Cray_CCE 
+srun -n 2  ./MPI_Send_Recv_2_Cray_CCE 
